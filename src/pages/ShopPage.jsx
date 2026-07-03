@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useDeferredValue } from 'react';
 import apiClient from '../api/apiClient';
 import ProductCard from '../components/client/ProductCard';
 import { Search, Filter, ChevronLeft, ChevronRight } from 'lucide-react';
@@ -9,7 +9,7 @@ const ShopPage = () => {
   
   // Filters
   const [searchTerm, setSearchTerm] = useState('');
-  const [maxPrice, setMaxPrice] = useState(5000);
+  const [selectedPriceRange, setSelectedPriceRange] = useState({ label: 'Todos', min: 0, max: Infinity });
   
   // Pagination
   const [currentPage, setCurrentPage] = useState(1);
@@ -30,14 +30,37 @@ const ShopPage = () => {
     fetchProducts();
   }, []);
 
+  // Calculate dynamic price ranges based on store average
+  const priceCategories = useMemo(() => {
+    if (products.length === 0) return [{ label: 'Todos', min: 0, max: Infinity }];
+    
+    const sum = products.reduce((acc, p) => acc + parseFloat(p.price), 0);
+    const avg = sum / products.length;
+    
+    // Create logical brackets around the average. Round to nearest 10 for cleaner look.
+    const lowEnd = Math.max(10, Math.round((avg * 0.5) / 10) * 10);
+    const highEnd = Math.round((avg * 1.5) / 10) * 10;
+    
+    return [
+      { label: 'Todos', min: 0, max: Infinity },
+      { label: `Hasta $${lowEnd}`, min: 0, max: lowEnd },
+      { label: `$${lowEnd} - $${highEnd}`, min: lowEnd, max: highEnd },
+      { label: `Más de $${highEnd}`, min: highEnd, max: Infinity }
+    ];
+  }, [products]);
+
+  // Deferred values for smoother UI when typing
+  const deferredSearchTerm = useDeferredValue(searchTerm);
+
   // Compute filtered and paginated products
   const filteredProducts = useMemo(() => {
     return products.filter(product => {
-      const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
-      const matchesPrice = parseFloat(product.price) <= maxPrice;
+      const matchesSearch = product.name.toLowerCase().includes(deferredSearchTerm.toLowerCase());
+      const price = parseFloat(product.price);
+      const matchesPrice = price >= selectedPriceRange.min && price <= selectedPriceRange.max;
       return matchesSearch && matchesPrice;
     });
-  }, [products, searchTerm, maxPrice]);
+  }, [products, deferredSearchTerm, selectedPriceRange]);
 
   const totalPages = Math.ceil(filteredProducts.length / itemsPerPage) || 1;
   
@@ -50,15 +73,15 @@ const ShopPage = () => {
   // Reset to page 1 when filters change
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchTerm, maxPrice]);
+  }, [searchTerm, selectedPriceRange]);
 
   if (loading) {
     return (
       <div className="max-w-7xl mx-auto px-4 py-8">
-        <h2 className="text-3xl font-bold mb-8 text-gray-800 dark:text-gray-100">Nuestros Productos</h2>
+        <h2 className="text-3xl font-bold mb-8 text-slate-800 dark:text-slate-100">Nuestros Productos</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {[1, 2, 3, 4, 5, 6, 7, 8].map((n) => (
-            <div key={n} className="bg-gray-200 dark:bg-gray-700 rounded-lg h-80 animate-pulse"></div>
+            <div key={n} className="bg-slate-200 dark:bg-slate-700 rounded-2xl h-80 animate-pulse"></div>
           ))}
         </div>
       </div>
@@ -66,60 +89,60 @@ const ShopPage = () => {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8 flex flex-col md:flex-row gap-8">
-      {/* Sidebar - Filters */}
-      <div className="w-full md:w-1/4 bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm h-fit">
-        <h3 className="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-100 flex items-center gap-2">
-          <Filter size={20} /> Filtros
-        </h3>
-        
-        <div className="mb-6">
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-            Buscar
-          </label>
-          <div className="relative">
-            <input
-              type="text"
-              placeholder="Ej. MacBook..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-1 focus:ring-primary dark:bg-gray-700 dark:text-white"
-            />
-            <Search className="absolute left-3 top-2.5 text-gray-400" size={18} />
+    <div className="max-w-7xl mx-auto px-4 py-8 flex flex-col gap-8">
+      {/* Header & Horizontal Filters */}
+      <div className="glass p-6 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm z-10">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div className="flex-shrink-0">
+            <h2 className="text-3xl font-extrabold text-slate-800 dark:text-slate-100 tracking-tight flex items-center gap-3">
+              Catálogo
+            </h2>
+            <p className="text-slate-500 dark:text-slate-400 mt-1 text-sm">
+              Encuentra los mejores productos
+            </p>
           </div>
-        </div>
+          
+          <div className="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto flex-grow justify-end">
+            <div className="relative w-full sm:w-64">
+              <input
+                type="text"
+                placeholder="Ej. MacBook..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-10 pr-4 py-2.5 border border-slate-300 dark:border-slate-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 dark:bg-slate-700 dark:text-white transition-all bg-white/50"
+              />
+              <Search className="absolute left-3 top-3 text-slate-400" size={18} />
+            </div>
 
-        <div className="mb-6">
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-            Precio Máximo: ${maxPrice}
-          </label>
-          <input
-            type="range"
-            min="0"
-            max="5000"
-            step="100"
-            value={maxPrice}
-            onChange={(e) => setMaxPrice(Number(e.target.value))}
-            className="w-full accent-primary"
-          />
-          <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 mt-2">
-            <span>$0</span>
-            <span>$5000+</span>
+            <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto px-1 py-1">
+              {priceCategories.map((category) => (
+                <button
+                  key={category.label}
+                  onClick={() => setSelectedPriceRange(category)}
+                  className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 ${
+                    selectedPriceRange.label === category.label
+                      ? 'bg-primary text-white shadow-md shadow-primary/20 scale-105'
+                      : 'bg-slate-100 dark:bg-slate-800/50 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700'
+                  }`}
+                >
+                  {category.label}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </div>
 
       {/* Main Content - Products */}
-      <div className="w-full md:w-3/4">
-        <h2 className="text-3xl font-bold mb-6 text-gray-800 dark:text-gray-100">Catálogo</h2>
-        
+      <div className="w-full">
         {filteredProducts.length === 0 ? (
-          <div className="text-center py-12 text-gray-500 dark:text-gray-400">
-            No se encontraron productos con esos filtros.
+          <div className="text-center py-20 px-6 glass rounded-2xl border-dashed border-2 border-slate-300 dark:border-slate-600 text-slate-500 dark:text-slate-400 min-h-[400px] flex flex-col items-center justify-center">
+            <div className="text-5xl mb-4">🔍</div>
+            <p className="text-lg font-medium">No se encontraron productos con esos filtros.</p>
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
               {paginatedProducts.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}
@@ -127,21 +150,21 @@ const ShopPage = () => {
 
             {/* Pagination Controls */}
             {totalPages > 1 && (
-              <div className="flex justify-center items-center space-x-4">
+              <div className="flex justify-center items-center space-x-4 mt-12">
                 <button
                   onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                   disabled={currentPage === 1}
-                  className="p-2 rounded-full border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="p-3 rounded-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 dark:text-white text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm transition-colors"
                 >
                   <ChevronLeft size={20} />
                 </button>
-                <span className="text-gray-700 dark:text-gray-300 font-medium">
+                <span className="text-slate-700 dark:text-slate-300 font-medium px-4 py-2 glass rounded-xl">
                   Página {currentPage} de {totalPages}
                 </span>
                 <button
                   onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
                   disabled={currentPage === totalPages}
-                  className="p-2 rounded-full border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="p-3 rounded-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 dark:text-white text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm transition-colors"
                 >
                   <ChevronRight size={20} />
                 </button>

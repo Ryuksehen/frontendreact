@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import Navbar from './components/common/Navbar';
 import Footer from './components/common/Footer';
 import ProtectedRoute from './components/common/ProtectedRoute';
@@ -17,6 +17,17 @@ import ClientList from './pages/ClientList';
 import OrderList from './pages/OrderList';
 import CreateAdmin from './pages/CreateAdmin';
 import AdminProducts from './pages/AdminProducts';
+import AdminLayout from './components/admin/AdminLayout';
+
+const ClientLayout = () => (
+  <div className="flex flex-col min-h-screen bg-slate-50 dark:bg-slate-900 transition-colors">
+    <Navbar />
+    <main className="grow flex flex-col">
+      <Outlet />
+    </main>
+    <Footer />
+  </div>
+);
 
 function App() {
   const { theme } = useThemeStore();
@@ -31,97 +42,66 @@ function App() {
 
   return (
     <Router>
-      <div className="flex flex-col min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors">
-        <Navbar />
-        <main className="grow flex flex-col">
-          <Routes>
-            {/* Rutas Públicas */}
-            <Route path="/" element={<Navigate to="/login" replace />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
+      <Routes>
+        {/* Rutas de Cliente (con Navbar y Footer) */}
+        <Route element={<ClientLayout />}>
+          {/* Rutas Públicas */}
+          <Route path="/" element={<Navigate to="/login" replace />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
 
-            {/* Rutas de Cliente (o compartido) */}
-            <Route 
-              path="/shop" 
-              element={
-                <ProtectedRoute requiredRole="cliente">
-                  <ShopPage />
-                </ProtectedRoute>
-              } 
-            />
-            <Route 
-              path="/cart" 
-              element={
-                <ProtectedRoute requiredRole="cliente">
-                  <CartPage />
-                </ProtectedRoute>
-              } 
-            />
-            <Route 
-              path="/orders" 
-              element={
-                <ProtectedRoute>
-                  <OrdersPage />
-                </ProtectedRoute>
-              } 
-            />
-            <Route 
-              path="/orders/:id" 
-              element={
-                <ProtectedRoute>
-                  <OrderDetail />
-                </ProtectedRoute>
-              } 
-            />
+          {/* Rutas Compartidas / Privadas de Cliente */}
+          <Route 
+            path="/shop" 
+            element={
+              <ProtectedRoute>
+                <ShopPage />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/cart" 
+            element={
+              <ProtectedRoute requiredRole="cliente">
+                <CartPage />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/orders" 
+            element={
+              <ProtectedRoute>
+                <OrdersPage />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/orders/:id" 
+            element={
+              <ProtectedRoute>
+                <OrderDetail />
+              </ProtectedRoute>
+            } 
+          />
+          <Route path="*" element={<div className="text-center py-20 text-2xl">404 - Página no encontrada</div>} />
+        </Route>
 
-            {/* Rutas de Administrador */}
-            <Route 
-              path="/admin" 
-              element={
-                <ProtectedRoute requiredRole="admin">
-                  <AdminDashboard />
-                </ProtectedRoute>
-              } 
-            />
-            <Route 
-              path="/admin/clients" 
-              element={
-                <ProtectedRoute requiredRole="admin">
-                  <ClientList />
-                </ProtectedRoute>
-              } 
-            />
-            <Route 
-              path="/admin/orders" 
-              element={
-                <ProtectedRoute requiredRole="admin">
-                  <OrderList />
-                </ProtectedRoute>
-              } 
-            />
-            <Route 
-              path="/admin/create" 
-              element={
-                <ProtectedRoute requiredRole="admin">
-                  <CreateAdmin />
-                </ProtectedRoute>
-              } 
-            />
-            <Route 
-              path="/admin/products" 
-              element={
-                <ProtectedRoute requiredRole="admin">
-                  <AdminProducts />
-                </ProtectedRoute>
-              } 
-            />
-
-            {/* 404 */}
-            <Route path="*" element={<div className="text-center py-20 text-2xl">404 - Página no encontrada</div>} />
-          </Routes>
-        </main>
-        <Footer />
-      </div>
+        {/* Rutas de Administrador (Layout independiente sin Navbar) */}
+        <Route 
+          path="/admin" 
+          element={
+            <ProtectedRoute requiredRole="admin">
+              <AdminLayout />
+            </ProtectedRoute>
+          }
+        >
+          <Route index element={<AdminDashboard />} />
+          <Route path="clients" element={<ClientList />} />
+          <Route path="orders" element={<OrderList />} />
+          <Route path="create" element={<CreateAdmin />} />
+          <Route path="products" element={<AdminProducts />} />
+        </Route>
+      </Routes>
     </Router>
   );
 }

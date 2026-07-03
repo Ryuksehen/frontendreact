@@ -1,16 +1,27 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 @import "tailwindcss";
 
 @custom-variant dark (&:is(.dark, .dark *));
 
 @theme {
-  --color-primary: #aa3bff;
-  --color-primary-hover: #902bd9;
-  --color-background: #ffffff;
-  --color-background-dark: #16171d;
+  --color-primary: #3b82f6; /* A more professional trust-building blue */
+  --color-primary-hover: #2563eb;
+  --color-background: #f8fafc;
+  --color-background-dark: #0f172a; /* Sleek slate dark mode */
 }
 
 @layer base {
   body {
-    @apply bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100;
+    @apply bg-slate-50 text-slate-900 dark:bg-slate-900 dark:text-slate-100 font-sans antialiased selection:bg-primary/30;
+    font-family: 'Inter', sans-serif;
+  }
+}
+
+@layer utilities {
+  .glass {
+    @apply bg-white/70 dark:bg-slate-800/70 backdrop-blur-md border border-white/20 dark:border-slate-700/50 shadow-sm;
+  }
+  .card-hover {
+    @apply transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-primary/10;
   }
 }
