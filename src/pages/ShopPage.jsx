@@ -106,7 +106,7 @@ const ShopPage = () => {
             <div className="relative w-full sm:w-64">
               <input
                 type="text"
-                placeholder="Ej. MacBook..."
+                placeholder="Ej. Sillon..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full pl-10 pr-4 py-2.5 border border-slate-300 dark:border-slate-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 dark:bg-slate-700 dark:text-white transition-all bg-white/50"
