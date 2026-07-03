@@ -1,0 +1,208 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "name": "Omar",
+      "email": "react@react.com",
+      "password": "react123",
+      "role": "admin"
+    },
+    {
+      "id": "2",
+      "name": "Omar",
+      "email": "omar@gmail.com",
+      "password": "123",
+      "role": "cliente"
+    },
+    {
+      "name": "omar",
+      "email": "omar1@gmail.com",
+      "password": "123456",
+      "phone": "1010101010",
+      "address": "calle 1",
+      "role": "cliente",
+      "id": "V0TywCZjS7Q"
+    },
+    {
+      "name": "mv",
+      "email": "mv@gmail.com",
+      "password": "123456789",
+      "role": "admin",
+      "id": "vcr0n75XSjM"
+    }
+  ],
+  "products": [
+    {
+      "id": "1",
+      "name": "Sillón Nórdico Minimalista",
+      "price": 299.99,
+      "description": "Sillón de diseño escandinavo, tapizado en tela premium y patas de madera maciza.",
+      "image": "https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?q=80&w=600&auto=format&fit=crop"
+    },
+    {
+      "id": "2",
+      "name": "Lámpara de Pie Industrial",
+      "price": 89.5,
+      "description": "Lámpara de pie con acabado en metal negro mate, perfecta para espacios modernos.",
+      "image": "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?q=80&w=600&auto=format&fit=crop"
+    },
+    {
+      "id": "3",
+      "name": "Mesa de Centro de Roble",
+      "price": 149,
+      "description": "Mesa de centro rectangular fabricada en madera de roble natural.",
+      "image": "https://images.unsplash.com/photo-1533090481720-856c6e3c1fdc?q=80&w=600&auto=format&fit=crop"
+    },
+    {
+      "id": "4",
+      "name": "Estantería Flotante Geométrica",
+      "price": 45,
+      "description": "Estantería de pared de metal y madera con diseño hexagonal moderno.",
+      "image": "https://images.unsplash.com/photo-1550581190-9c1c48d21d6c?q=80&w=600&auto=format&fit=crop"
+    },
+    {
+      "id": "5",
+      "name": "Maceta de Cerámica Texturizada",
+      "price": 24.99,
+      "description": "Maceta decorativa ideal para plantas de interior, con textura artesanal.",
+      "image": "https://images.unsplash.com/photo-1485955900006-10f4d324d411?q=80&w=600&auto=format&fit=crop"
+    }
+  ],
+  "orders": [
+    {
+      "userId": "M4RWJID08Co",
+      "date": "2026-07-03T01:49:42.787Z",
+      "items": [
+        {
+          "id": "3",
+          "name": "Smartphone X",
+          "price": 899,
+          "description": "Latest generation smartphone with advanced camera system.",
+          "image": "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?q=80&w=600&auto=format&fit=crop",
+          "quantity": 2
+        }
+      ],
+      "total": 1798,
+      "status": "Rechazado",
+      "id": "6gEHK8sTCkI"
+    },
+    {
+      "userId": "M4RWJID08Co",
+      "date": "2026-07-03T01:49:59.936Z",
+      "items": [
+        {
+          "id": "2",
+          "name": "Wireless Noise Cancelling Headphones",
+          "price": 249.5,
+          "description": "Premium over-ear headphones with active noise cancellation and 30-hour battery life.",
+          "image": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=600&auto=format&fit=crop",
+          "quantity": 2
+        }
+      ],
+      "total": 499,
+      "status": "Aprobado",
+      "id": "0wXcl_oo0OM"
+    },
+    {
+      "userId": "M4RWJID08Co",
+      "date": "2026-07-03T02:39:52.150Z",
+      "items": [
+        {
+          "id": "2",
+          "name": "Wireless Noise Cancelling Headphones",
+          "price": 249.5,
+          "description": "Premium over-ear headphones with active noise cancellation and 30-hour battery life.",
+          "image": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=600&auto=format&fit=crop",
+          "quantity": 1
+        },
+        {
+          "id": "1",
+          "name": "Laptop Pro 15",
+          "price": 1299.99,
+          "description": "Powerful laptop for professionals with 16GB RAM and 512GB SSD.",
+          "image": "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?q=80&w=600&auto=format&fit=crop",
+          "quantity": 1
+        },
+        {
+          "id": "3",
+          "name": "Smartphone X",
+          "price": 899,
+          "description": "Latest generation smartphone with advanced camera system.",
+          "image": "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?q=80&w=600&auto=format&fit=crop",
+          "quantity": 1
+        },
+        {
+          "id": "4",
+          "name": "Smartwatch Series 5",
+          "price": 199.99,
+          "description": "Fitness tracking smartwatch with heart rate monitor.",
+          "image": "https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=600&auto=format&fit=crop",
+          "quantity": 1
+        },
+        {
+          "name": "MacBook Air M5",
+          "price": 4000,
+          "description": "El nuevo lanzamiento de Apple",
+          "image": "https://i.pcmag.com/imagery/articles/019B6ClRyAnAN24qsDDI50I-3.fit_lim.v1685987242.jpg",
+          "id": "zXM13fhLFpA",
+          "quantity": 1
+        }
+      ],
+      "total": 6648.48,
+      "status": "Aprobado",
+      "id": "jy9vplQaM5E"
+    },
+    {
+      "userId": "M4RWJID08Co",
+      "date": "2026-07-03T03:13:48.344Z",
+      "items": [
+        {
+          "id": "2",
+          "name": "Wireless Noise Cancelling Headphones",
+          "price": 249.5,
+          "description": "Premium over-ear headphones with active noise cancellation and 30-hour battery life.",
+          "image": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=600&auto=format&fit=crop",
+          "quantity": 5
+        }
+      ],
+      "total": 1247.5,
+      "status": "Rechazado",
+      "id": "hztlx-FQC4Y"
+    },
+    {
+      "userId": "V0TywCZjS7Q",
+      "date": "2026-07-03T05:06:17.649Z",
+      "items": [
+        {
+          "id": "2",
+          "name": "Wireless Noise Cancelling Headphones",
+          "price": 249.5,
+          "description": "Premium over-ear headphones with active noise cancellation and 30-hour battery life.",
+          "image": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=600&auto=format&fit=crop",
+          "quantity": 1
+        }
+      ],
+      "total": 249.5,
+      "status": "Rechazado",
+      "id": "HFwPH-m3DoA"
+    },
+    {
+      "userId": "V0TywCZjS7Q",
+      "date": "2026-07-03T05:25:36.767Z",
+      "items": [
+        {
+          "id": "3",
+          "name": "Smartphone X",
+          "price": 899,
+          "description": "Latest generation smartphone with advanced camera system.",
+          "image": "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?q=80&w=600&auto=format&fit=crop",
+          "quantity": 35
+        }
+      ],
+      "total": 31465,
+      "status": "Pendiente",
+      "id": "HaQIaq6LZdQ"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}
